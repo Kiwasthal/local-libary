@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const BookInstanceSchema = new Schema({
-  books: { type: Schema.Types.ObjectId, ref: 'Book', required: true },
-  //referencing the associated book
+  book: { type: Schema.Types.ObjectId, ref: 'Book', required: true }, //reference to the associated book
   imprint: { type: String, required: true },
   status: {
     type: String,
@@ -22,3 +21,9 @@ BookInstanceSchema.virtual('url').get(() => {
 
 //Export model
 module.exports = mongoose.model('BookInstance', BookInstanceSchema);
+
+//New things here are the field options :
+
+//enum : This allows us to set the allowed values of a string. In this case we use it to specify the availiability status of our books(using an enum means that we can prevent mis-spellings and arbitrary values for our status).
+
+//default : We use default to set the default status for newly created bookinstances to maintenance and the default due_back date to now (note how you can call the Date function when setting the date!)
