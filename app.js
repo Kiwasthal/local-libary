@@ -1,8 +1,37 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+const mongoose = require('mongoose');
+
+//Define Schema
+const Schema = mongoose.Schema;
+
+const SomeModelSchema = new Schema({
+  a_string: String,
+  a_date: Date,
+});
+
+//Compile model from schema
+const SomeModel = mongoose.model('SomeModel', SomeModelSchema);
+
+//Connect to mongodb via env configuration
+const mongoDB = process.env.MONGO_DB_CONFIG;
+mongoose.connect(
+  mongoDB,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log('Connected to database');
+  }
+);
+
+//Get the default connection
+const db = mongoose.connection;
+//Bind connection to error event ( to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,12 +52,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
