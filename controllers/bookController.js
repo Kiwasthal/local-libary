@@ -39,9 +39,19 @@ exports.index = function (req, res) {
 //On success the callback function calls res.render() specifying a view(template) named 'index' and an object containing the data that is to be inserted into it (this includes the results object that contains our model counts). The data is supplied as key-value pairs, and can be accessed in the template using the key.
 
 // Display list of all books.
-exports.book_list = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book list');
+exports.book_list = function (req, res, next) {
+  Book.find({}, 'title author')
+    .sort({ title: 1 })
+    .populate('author')
+    .exec((err, list_books) => {
+      if (err) return next(err);
+      res.render('book_list', { title: 'Book List', book_list: list_books });
+    });
 };
+
+//The method uses the model's find() function to return all Book objects, selecting to return only the title and author as we don't need the other fields (it will also return the _id and virtual fields), and then sorts the results by the title alhpbetically using the sort() method. Here we also call populate() on Book, specifying the author field - this will replace the stored book author id with the full author details.
+
+//On success, the callback passed to the query renders the book_list template, passing the title and book_list as variables
 
 // Display detail page for a specific book.
 exports.book_detail = function (req, res) {

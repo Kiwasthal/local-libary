@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%-include('./partial/head.ejs') %>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2"><%-include('./partial/sidenav.ejs') %></div>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <ul>
+            <% if (bookinstance_list.length) { %> <% bookinstance_list.forEach(
+            bookinstance => { %>
+            <li>
+              <a href="<%= bookinstance.url  %> "
+                ><%= bookinstance.book.title %>
+              </a>
+              : <%= bookinstance.imprint %>
+            </li>
+            <% if (bookinstance.status == 'Available') { %>
+            <span class="text-success"> <%= bookinstance.status %> </span>
+            <% } else if (bookinstance.status == 'Maintenance') { %>
+            <span class="text-danger"> <%= bookinstance.status %> </span>
+            <% } else { %>
+            <span class="text-warning"> <%= bookinstance.status %> </span>
+            <% } %> <% if (bookinstance.status != 'Available') { %>
+            <span>Due : <%= bookinstance.due_back %> </span>
+            <% } %> <% }) %> <%} else { %>
+            <li>There are no book copies in this library</li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
