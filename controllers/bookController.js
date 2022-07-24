@@ -13,6 +13,9 @@ exports.index = function (req, res) {
         //Pass en empty object as match condition to find all docs of this collection
       },
       book_instance_count(callback) {
+        BookInstance.countDocuments({}, callback);
+      },
+      book_instance_available_count(callback) {
         BookInstance.countDocuments({ status: 'Available' }, callback);
       },
       author_count(callback) {
@@ -31,6 +34,9 @@ exports.index = function (req, res) {
     }
   );
 };
+//The async.parallel() method is passed an object with functions for getting the counts for each of our models. These functions are all started at the same time. When al of them have completed the final callback is invoked with the counts in the results parameter (or an error).
+
+//On success the callback function calls res.render() specifying a view(template) named 'index' and an object containing the data that is to be inserted into it (this includes the results object that contains our model counts). The data is supplied as key-value pairs, and can be accessed in the template using the key.
 
 // Display list of all books.
 exports.book_list = function (req, res) {
