@@ -25,7 +25,7 @@
             <% } else { %>
             <span class="text-warning"> <%= bookinstance.status %> </span>
             <% } %> <% if (bookinstance.status != 'Available') { %>
-            <span>Due : <%= bookinstance.due_back %> </span>
+            <span>Due : <%= bookinstance.due_back_formatted %> </span>
             <% } %> <% }) %> <%} else { %>
             <li>There are no book copies in this library</li>
             <% } %>
