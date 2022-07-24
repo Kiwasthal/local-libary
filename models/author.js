@@ -11,7 +11,7 @@ const AuthorSchema = new Schema({
 
 //Virtual for author's full name
 
-AuthorSchema.virtual('name').get(() => {
+AuthorSchema.virtual('name').get(function () {
   //To avoid errors in cases where an author does not have either a family name or first name
   //We want to make sure we handle the exception by returning an empty string for that case
   let fullname = '';
@@ -24,7 +24,7 @@ AuthorSchema.virtual('name').get(() => {
   return fullname;
 });
 
-AuthorSchema.virtual('lifespan').get(() => {
+AuthorSchema.virtual('lifespan').get(function () {
   let lifetime_string = '';
   if (this.date_of_birth) {
     lifetime_string = this.date_of_birth.getYear().toString();
@@ -37,9 +37,13 @@ AuthorSchema.virtual('lifespan').get(() => {
 });
 
 //Virtual for author's URL
-AuthorSchema.virtual('url').get(() => {
+AuthorSchema.virtual('url').get(function () {
   return '/catalog/author/' + this._id;
 });
 
 //Export model
 module.exports = mongoose.model('Author', AuthorSchema);
+
+//Note: Declaring our URL's as a virtual in the schema is a good idea becuase then the URL for an item only ever needs to be changed in one place. At this point, a link using this URL would not work, because we haven't got any routes handling code for individual model instances. We'll set those up in a later article!
+
+//At the end of the module, we export the model.

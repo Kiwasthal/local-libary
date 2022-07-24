@@ -6,7 +6,7 @@ const bookGenreSchema = new Schema({
   name: { type: String, minLength: 3, maxLength: 100 },
 });
 
-bookGenreSchema.virtual('url').get(() => {
+bookGenreSchema.virtual('url').get(function () {
   return '/catalog/genre/' + this._id;
 });
 
