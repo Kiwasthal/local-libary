@@ -10,4 +10,4 @@ bookGenreSchema.virtual('url').get(function () {
   return '/catalog/genre/' + this._id;
 });
 
-module.exports = mongoose.model('BookGenre', bookGenreSchema);
+module.exports = mongoose.model('Genre', bookGenreSchema);

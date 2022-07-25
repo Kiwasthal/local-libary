@@ -1,5 +1,6 @@
-const Genre = require('../models/genre');
 const Book = require('../models/book');
+const Genre = require('../models/genre');
+
 const async = require('async');
 
 // Display list of all Genre.
