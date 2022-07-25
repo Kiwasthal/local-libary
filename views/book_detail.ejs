@@ -24,12 +24,48 @@
           <p>
             <strong>Genre :</strong>
      
-            <% if (book.genre.length) { %> <% book.genre.forEach(genre=> { %>
+            <% if (book.genre.length) { %> <% book.genre.forEach((genre,index)=> { %>
                <a href="<%= genre.url %> "> <%= genre.name %> </a>
-               <% }) %> <% } else { %> 
+               <% if (index < book.genre.length - 1) { %>
+                ,
+                <% } %>
+               <% }) %> <% } else {  %>
+                No Genres 
                <% } %>
           </p>
-
+            <div style="margin-left:20px ; margin-top: 20px;">
+              <h4>Copies</h4>
+               <% if (book_instances.length) { %> 
+                <% book_instances.forEach(bookinstance=> { %>
+                 <% if (bookinstance.status == 'Available') { %> 
+                  <p class="text-success">
+                    <%= bookinstance.status %>
+                  </p>
+                 <% } else if (bookinstance.status == 'Maintenance') { %>
+                  <p class="text-danger">
+                    <%= bookinstance.status %>
+                  </p>
+                <% } else { %>
+                  <p class="text-warning">
+                    <%= bookinstance.status %>
+                      </p>
+                    <% } %> 
+                 <p><strong>Imprint :</strong>
+                  <%= bookinstance.imprint %> 
+                 </p>
+                <% if (bookinstance.status != 'Available') { %> 
+                 <p><strong>Due Back : </strong>
+                  <%= bookinstance.due_back_formatted %>
+                 </p>
+                <% } %>
+                <p><strong>Id :</strong>
+                  <a href="<%= bookinstance.url %> ">
+                   <%= bookinstance.id  %> 
+                  </a>
+                </p>
+               <% }) %>
+              <% } %>
+            </div>
           </div>
         </div>
       </div>
