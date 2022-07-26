@@ -1,4 +1,6 @@
 var Author = require('../models/author');
+const async = require('async');
+const Book = require('../models/book');
 
 // Display list of all Authors.
 exports.author_list = function (req, res, next) {
@@ -15,9 +17,38 @@ exports.author_list = function (req, res, next) {
 //The method uses the model's find(),sort() and exec() functions to return all Author objects sorted by family_name in alphabetic order. The callback passed to the exec() method is called with any errors(or null) as the first parameter, or a list of all authors on success. If there is an error it calls the next middleware function with the error value, and if not it renders the author_list(.ejs) template, passing the page title and the lsit of authors (author_list).
 
 // Display detail page for a specific Author.
-exports.author_detail = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author detail: ' + req.params.id);
+// Display detail page for a specific Author.
+exports.author_detail = function (req, res, next) {
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+      authors_books(callback) {
+        Book.find({ author: req.params.id }, 'title summary').exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      } // Error in API usage.
+      if (results.author == null) {
+        // No results.
+        var err = new Error('Author not found');
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render('author_detail', {
+        title: 'Author Detail',
+        author: results.author,
+        author_books: results.authors_books,
+      });
+    }
+  );
 };
+
+//The method uses async.parallel() to query the Author and their associated book instances in apralles, with the callback rendering the page when (if) bother requests complete succesfully. The approach is exactly the same as described for the Genre detail page above.
 
 // Display Author create form on GET.
 exports.author_create_get = function (req, res) {
