@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%-include('./partial/head.ejs') %>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2"><%-include('./partial/sidenav.ejs') %></div>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <form action="" method="post">
+            <div class="form-group">
+              <label for="name">Genre:</label>
+              <input id="name" class="form-control" type="text"
+              placeholder="Fantasy, Poetry etc" name="name" required="true"
+              value="<% locals.genre === undefined ? "" : genre.name %>" />
+              <button
+                class="btn btn-primary"
+                type="submit"
+                style="margin-top: 20px"
+              >
+                Submit
+              </button>
+              <% if (locals.errors) { %>
+              <ul>
+                <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+                <% }) %>
+              </ul>
+              <% } %>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

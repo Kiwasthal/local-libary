@@ -32,6 +32,7 @@ exports.bookinstance_detail = (req, res, next) => {
       });
     });
 };
+//The moethod calls BookInstance.findById() with the ID of a specific book instance extracted from the URL (using the route), and accessed within the controller via the request parameters : req.params.id. It then calls populate() to get the details of the associated Book.
 
 //Display BookInstance create form on GET.
 exports.bookinstance_create_get = (req, res) => {
