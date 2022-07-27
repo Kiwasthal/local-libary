@@ -223,9 +223,73 @@ exports.author_update_get = function (req, res, next) {
 };
 
 // Handle Author update on POST.
-exports.author_update_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author update POST');
-};
+exports.author_update_post = [
+  //Validate and sanitize fields
+  body('first_name')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('First name missing')
+    .isAlphanumeric()
+    .withMessage('First name contains non-alphanumeric characters'),
+
+  body('family_name')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('Family name is missing')
+    .isAlphanumeric()
+    .withMessage('Family name contains non-alphanumeric characters'),
+
+  body('date_of_birth', 'Invalid date of birth')
+    .trim()
+    .optional()
+    .isISO8601()
+    .toDate(),
+
+  body('date_of_death', 'Invalid date of death')
+    .trim()
+    .optional()
+    .isISO8601()
+    .toDate(),
+
+  (req, res, next) => {
+    //Extract the validation errors from request.
+    const errors = validationResult(req);
+
+    //Create an Authro object with sanitized data maintaining the old id
+
+    let author = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id, //Keeping the id of the object as is or else a new id is to be assigned
+    });
+
+    if (!errors.isEmpty()) {
+      //There are errors. Render the form again with sanitized values && error messages
+      res.render('author_form', {
+        title: 'Edit Author',
+        author,
+        formatDate: format,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Author.findByIdAndUpdate(
+        req.params.id,
+        author,
+        {},
+        function (err, theauthor) {
+          if (err) return next(err);
+          //Succesful - redirect to author detail page.
+          res.redirect(theauthor.url);
+        }
+      );
+    }
+  },
+];
 
 //The module first requries the model that we'll later  be using to access and update our data. It then exports function for each of the URLs we wish to handle (the create, update and delete operations use forms, and hence also have additional methods for handling form post requests - we'll discuss those methods in the 'forms article' later on).
 
