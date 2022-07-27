@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%-include('./partial/head.ejs') %>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2"><%-include('./partial/sidenav.ejs') %></div>
+        <div class="col-sm-10">
+          <h1><%= title %></h1>
+          <form action="" method="post">
+            <div class="form-group">
+              <label for="book">Book:</label>
+              <select
+                class="form-control"
+                type="text"
+                name="book"
+                id="book"
+                placeholder="Select book"
+                required="true"
+              >
+                <% book_list.sort((a, b) => { let textA = a.title.toUpperCase();
+                let textB = b.title.toUpperCase(); return (textA < textB) ? -1 :
+                (textA > textB) ? 1 : 0; }) %> <% book_list.forEach( book => {
+                %> <% if (typeof bookinstance === "undefined") { %>
+                <option value="<%= book._id %>"><%= book.title %></option>
+                <% } else { %>
+                <option
+                  value="<%= book._id %>"
+                  selected="<% selected_book === book.id.toString() ? 'selected' : false %>"
+                >
+                  <%= book.title %>
+                </option>
+                <% } %> <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="imprint">Imprint:</label>
+              <input
+                class="form-control"
+                id="imprint"
+                name="imprint"
+                type="text"
+                placeholder="Publisher and date information"
+                required="true"
+                value="<% typeof bookinstance == 'undefined' ? '' : bookinstance.due_back  %>"
+              />
+            </div>
+            <div class="form-group">
+              <label for="due_back">Date when book is available:</label>
+              <input
+                class="form-control"
+                name="due_back"
+                type="date"
+                value="<% typeof bookinstance === 'undefined' ? '' : bookinstance.due_back %>"
+              />
+            </div>
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select
+                class="form-control"
+                name="status"
+                id="status"
+                required="true"
+                placeholder="Select status"
+              >
+                <option value="Maintenance">Maintenance</option>
+                <option value="Available">Available</option>
+                <option value="Loaned">Loaned</option>
+                <option value="Reserved">Reserved</option>
+              </select>
+            </div>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              style="margin-top: 20px"
+            >
+              Submit
+            </button>
+          </form>
+          <% if (locals.errors) { %>
+          <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
