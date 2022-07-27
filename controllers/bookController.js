@@ -213,8 +213,30 @@ exports.book_create_post = [
 //The final difference with respect to the ofther form handling code is that we need to pass in all existing genres and authors to the form. In order to mark the genres that were checkd by the user we iterate through all the genres and add the checked-'true' parameter to those that were in our post data.
 
 // Display book delete form on GET.
-exports.book_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book delete GET');
+exports.book_delete_get = function (req, res, next) {
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.params.id).exec(callback);
+      },
+      book_instances(callback) {
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) next(err);
+      //No results redirect to book list
+      if (results.book == 0) {
+        res.redirect('/catalog/books');
+      }
+      //Seccess! proceed to render
+      res.render('book_delete', {
+        title: 'Delete Book',
+        book: results.book,
+        book_instances: results.book_instances,
+      });
+    }
+  );
 };
 
 // Handle book delete on POST.
