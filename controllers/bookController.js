@@ -233,7 +233,7 @@ exports.book_delete_get = function (req, res, next) {
       res.render('book_delete', {
         title: 'Delete Book',
         book: results.book,
-        book_instances: results.book_instances,
+        books_instances: results.book_instances,
       });
     }
   );
