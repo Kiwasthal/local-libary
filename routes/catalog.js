@@ -1,17 +1,18 @@
-const express = require('express');
-const router = express.Router();
+var express = require('express');
+var router = express.Router();
 
-const book_controller = require('../controllers/bookController');
-const author_controller = require('../controllers/authorController');
-const genre_controller = require('../controllers/genreController');
-const book_instance_controller = require('../controllers/bookinstanceController');
+// Require controller modules.
+var book_controller = require('../controllers/bookController');
+var author_controller = require('../controllers/authorController');
+var genre_controller = require('../controllers/genreController');
+var book_instance_controller = require('../controllers/bookinstanceController');
 
-//BOOKS ROUTES
+/// BOOK ROUTES ///
 
-//GET catalog home page.
+// GET catalog home page.
 router.get('/', book_controller.index);
 
-//GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
+// GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
 router.get('/book/create', book_controller.book_create_get);
 
 // POST request for creating Book.
@@ -20,24 +21,24 @@ router.post('/book/create', book_controller.book_create_post);
 // GET request to delete Book.
 router.get('/book/:id/delete', book_controller.book_delete_get);
 
-//POST request to delete Book.
-router.post('book/:id/delete', book_controller.book_delete_post);
+// POST request to delete Book.
+router.post('/book/:id/delete', book_controller.book_delete_post);
 
-//GET request to update Book.
+// GET request to update Book.
 router.get('/book/:id/update', book_controller.book_update_get);
 
-//Post request to update Book.
-router.post('book/:id/update', book_controller.book_update_post);
+// POST request to update Book.
+router.post('/book/:id/update', book_controller.book_update_post);
 
-//GET request for one Book.
+// GET request for one Book.
 router.get('/book/:id', book_controller.book_detail);
 
-//GET reuest for list of all Book items.
+// GET request for list of all Book items.
 router.get('/books', book_controller.book_list);
 
 /// AUTHOR ROUTES ///
 
-//GET request for creating Author. NOTE This must come before route for id (i.e. display author).
+// GET request for creating Author. NOTE This must come before route for id (i.e. display author).
 router.get('/author/create', author_controller.author_create_get);
 
 // POST request for creating Author.
@@ -46,7 +47,7 @@ router.post('/author/create', author_controller.author_create_post);
 // GET request to delete Author.
 router.get('/author/:id/delete', author_controller.author_delete_get);
 
-// Post request to delete Author.
+// POST request to delete Author.
 router.post('/author/:id/delete', author_controller.author_delete_post);
 
 // GET request to update Author.
@@ -132,9 +133,3 @@ router.get('/bookinstance/:id', book_instance_controller.bookinstance_detail);
 router.get('/bookinstances', book_instance_controller.bookinstance_list);
 
 module.exports = router;
-
-//The module requires Express and then uses it to create a Router object. The routes are all set up on the router, which is then exported.
-
-//The routes are defined either using .get() or .post() methods on the router object. All the paths are defined using strings(we do not use string patterns or regular expressions). Routes that act on some specific resource (e.g. book) use path parameters to get the object id from the URL.
-
-//The handler functions are all imported from the controller modules we created in the previous section.
