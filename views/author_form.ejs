@@ -39,7 +39,7 @@
                 name="date_of_birth"
                 id="date_of_birth"
                 class="form-control"
-                value="<%= locals.author === undefined ? '' : author.date_of_birth %>"
+                value="<%= typeof author === 'undefined' || !author.date_of_birth  ? '' :  formatDate(author.date_of_birth, 'yyyy-MM-dd' )  %>"
               />
               <label for="date_of_death">Date of death:</label>
               <input
@@ -47,7 +47,7 @@
                 name="date_of_death"
                 id="date_of_death"
                 class="form-control"
-                value="<%= locals.author === undefined ? '' : author.date_of_death %>"
+                value="<%= typeof author === 'undefined' || !author.date_of_death  ? '' :  formatDate(author.date_of_death, 'yyyy-MM-dd' )  %>"
               />
             </div>
             <button

@@ -2,6 +2,7 @@ var Author = require('../models/author');
 const async = require('async');
 const Book = require('../models/book');
 const { body, validationResult } = require('express-validator');
+const { format } = require('date-fns');
 
 // Display list of all Authors.
 exports.author_list = function (req, res, next) {
@@ -202,8 +203,23 @@ exports.author_delete_post = function (req, res, next) {
 //Note : We could check if the call to findById() returns any result, and if not, immediately render the list of all authors. We've left the code as it is above for brevity ( it will still return the list of authors if the id is not found, but this will happen after findByIdAndRemove)
 
 // Display Author update form on GET.
-exports.author_update_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author update GET');
+exports.author_update_get = function (req, res, next) {
+  //Get author information
+  Author.findById(req.params.id).exec((err, author) => {
+    if (err) return next(err);
+    if (author == null) {
+      //No results.
+      let err = new Error('Author not found');
+      err.status = 404;
+      return next(err);
+    }
+    //Sucess
+    res.render('author_form', {
+      title: 'Edit Author',
+      author,
+      formatDate: format,
+    });
+  });
 };
 
 // Handle Author update on POST.

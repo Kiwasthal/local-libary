@@ -96,6 +96,9 @@ exports.bookinstance_create_post = [
     }
   },
 ];
+//Same structure as other forms. First we validate && sanitize our data. If the data is invalid, we then re-display the form along with the data originally entered by the user plus a list of errors (error.array()). If the data is valid, we save the new BookInstance record and direct the user to the valid page.
+
+//Note :We could also add an extra parameter for validation only if the status if available and the due_date is empty in case we don't want available books with due_date since it does not make logical sense.
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = (req, res) => {
