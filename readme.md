@@ -12,7 +12,7 @@ The original tutorial makes use of PUG as the view language. I stuck with ejs si
 
 In the main page there is a collection of all-around info concerning the page plus a sidenav for user-navigation. From there on the user can interact following the CRUD model to manipulate all sorts of data concerning book entries ( author, bookinstances, books && genres).
 
-# Tools Used :
+### Tools Used :
 
 <ul>
   <li>Express</li>
