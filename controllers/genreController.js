@@ -117,13 +117,61 @@ exports.genre_create_post = [
 //This same pattern is used in all our post controllers : we run validators (with sanitizers),  then check for errors and either re-render the form with error information ro save the data.
 
 // Display Genre delete form on GET.
-exports.genre_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre delete GET');
+exports.genre_delete_get = function (req, res, next) {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+      genre_books(callback) {
+        Book.find({ genre: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.genre == null) {
+        //No results redirect to list
+        res.redirect('/catalog/genres');
+      }
+      //Sucess, render delete page
+      res.render('genre_delete', {
+        title: 'Delete Genre',
+        genre: results.genre,
+        genre_books: results.genre_books,
+      });
+    }
+  );
 };
 
 // Handle Genre delete on POST.
-exports.genre_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre delete POST');
+exports.genre_delete_post = function (req, res, next) {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.body.genreid).exec(callback);
+      },
+      genre_books(callback) {
+        Book.find({ genre: req.body.genreid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.genre_books.length > 0) {
+        //There are still books in this genre
+        res.redner('genre_delet', {
+          title: 'Delete Genre',
+          genre: results.genre,
+          genre_books: results.genre_books,
+        });
+        return;
+      }
+      //Genre has no books , delete genre
+      Genre.findByIdAndRemove(req.body.genreid, err => {
+        if (err) return next;
+        res.redirect('/catalog/genres');
+      });
+    }
+  );
 };
 
 // Display Genre update form on GET.
