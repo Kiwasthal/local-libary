@@ -4,22 +4,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var compression = require('compression');
+var helmet = require('helmet');
 
 const mongoose = require('mongoose');
 
-//Define Schema
-const Schema = mongoose.Schema;
-
-const SomeModelSchema = new Schema({
-  a_string: String,
-  a_date: Date,
-});
-
-//Compile model from schema
-const SomeModel = mongoose.model('SomeModel', SomeModelSchema);
-
 //Connect to mongodb via env configuration
-const mongoDB = process.env.MONGO_DB_CONFIG;
+const mongoDB = process.env.MONGO_DB_URI || process.env.MONGO_DB_CONFIG;
 mongoose.connect(
   mongoDB,
   { useNewUrlParser: true, useUnifiedTopology: true },
@@ -40,6 +31,8 @@ var catalogRouter = require('./routes/catalog');
 
 var app = express();
 
+app.use(helmet());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -48,6 +41,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
