@@ -4,7 +4,7 @@ A project built following the <a href='https://developer.mozilla.org/en-US/docs/
 
 Can be found <a href='https://stormy-sea-41422.herokuapp.com/catalog'>here</a>,deployed with heroku.
 
-# About
+# About :
 
 The original tutorial makes use of PUG as the view language. I stuck with ejs since it feels more natural since the syntax resembles that of HTML && JSX.
 
